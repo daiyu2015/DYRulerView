@@ -10,10 +10,11 @@
 		6EA6144C1B50E36400220F48 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA6144B1B50E36400220F48 /* main.m */; };
 		6EA6144F1B50E36400220F48 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA6144E1B50E36400220F48 /* AppDelegate.m */; };
 		6EA614521B50E36400220F48 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA614511B50E36400220F48 /* ViewController.m */; };
-		6EA614551B50E36400220F48 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6EA614531B50E36400220F48 /* Main.storyboard */; };
 		6EA614571B50E36400220F48 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6EA614561B50E36400220F48 /* Images.xcassets */; };
 		6EA6145A1B50E36400220F48 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA614581B50E36400220F48 /* LaunchScreen.xib */; };
 		6EA614661B50E36400220F48 /* InterviewDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA614651B50E36400220F48 /* InterviewDemoTests.m */; };
+		6EA614721B50E68100220F48 /* DYRulerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA614711B50E68100220F48 /* DYRulerView.m */; };
+		6EA614751B50E6EF00220F48 /* DYRulerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA614741B50E6EF00220F48 /* DYRulerCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,12 +35,15 @@
 		6EA6144E1B50E36400220F48 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6EA614501B50E36400220F48 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		6EA614511B50E36400220F48 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		6EA614541B50E36400220F48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6EA614561B50E36400220F48 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6EA614591B50E36400220F48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		6EA6145F1B50E36400220F48 /* InterviewDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InterviewDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EA614641B50E36400220F48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6EA614651B50E36400220F48 /* InterviewDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InterviewDemoTests.m; sourceTree = "<group>"; };
+		6EA614701B50E68100220F48 /* DYRulerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DYRulerView.h; sourceTree = "<group>"; };
+		6EA614711B50E68100220F48 /* DYRulerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DYRulerView.m; sourceTree = "<group>"; };
+		6EA614731B50E6EF00220F48 /* DYRulerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DYRulerCollectionViewCell.h; sourceTree = "<group>"; };
+		6EA614741B50E6EF00220F48 /* DYRulerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DYRulerCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,11 +85,11 @@
 		6EA614481B50E36400220F48 /* InterviewDemo */ = {
 			isa = PBXGroup;
 			children = (
-				6EA6144D1B50E36400220F48 /* AppDelegate.h */,
-				6EA6144E1B50E36400220F48 /* AppDelegate.m */,
+				6EA6146F1B50E65700220F48 /* DYRulerView */,
 				6EA614501B50E36400220F48 /* ViewController.h */,
 				6EA614511B50E36400220F48 /* ViewController.m */,
-				6EA614531B50E36400220F48 /* Main.storyboard */,
+				6EA6144D1B50E36400220F48 /* AppDelegate.h */,
+				6EA6144E1B50E36400220F48 /* AppDelegate.m */,
 				6EA614561B50E36400220F48 /* Images.xcassets */,
 				6EA614581B50E36400220F48 /* LaunchScreen.xib */,
 				6EA614491B50E36400220F48 /* Supporting Files */,
@@ -117,6 +121,17 @@
 				6EA614641B50E36400220F48 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6EA6146F1B50E65700220F48 /* DYRulerView */ = {
+			isa = PBXGroup;
+			children = (
+				6EA614701B50E68100220F48 /* DYRulerView.h */,
+				6EA614711B50E68100220F48 /* DYRulerView.m */,
+				6EA614731B50E6EF00220F48 /* DYRulerCollectionViewCell.h */,
+				6EA614741B50E6EF00220F48 /* DYRulerCollectionViewCell.m */,
+			);
+			path = DYRulerView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,7 +214,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6EA614551B50E36400220F48 /* Main.storyboard in Resources */,
 				6EA6145A1B50E36400220F48 /* LaunchScreen.xib in Resources */,
 				6EA614571B50E36400220F48 /* Images.xcassets in Resources */,
 			);
@@ -221,7 +235,9 @@
 			files = (
 				6EA614521B50E36400220F48 /* ViewController.m in Sources */,
 				6EA6144F1B50E36400220F48 /* AppDelegate.m in Sources */,
+				6EA614721B50E68100220F48 /* DYRulerView.m in Sources */,
 				6EA6144C1B50E36400220F48 /* main.m in Sources */,
+				6EA614751B50E6EF00220F48 /* DYRulerCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,14 +260,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		6EA614531B50E36400220F48 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6EA614541B50E36400220F48 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6EA614581B50E36400220F48 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
