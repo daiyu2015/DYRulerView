@@ -31,7 +31,10 @@
     for (UIView *view in self.contentView.subviews) {
         [view removeFromSuperview];
     }
-    self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, self.minorScaleSize.height*2+10, MAX(self.scaleSpacing*2, 40), 20)];
+    self.label = [[UILabel alloc] init];
+//    self.label.frame = CGRectMake(0, self.minorScaleSize.height*2+10, MAX(self.scaleSpacing*2, 40), 20);
+    self.label.center = CGPointMake(self.scaleSpacing+self.minorScaleSize.width*0.5, self.minorScaleSize.height*2+20);
+    self.label.bounds = CGRectMake(0, 0, MAX(self.scaleSpacing*2, 40), 20);
     self.label.textColor = [UIColor whiteColor];
     if (self.majorScaleFont) {
         self.label.font = self.majorScaleFont;

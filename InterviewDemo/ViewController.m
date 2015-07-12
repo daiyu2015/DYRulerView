@@ -56,7 +56,7 @@
 
 - (NSInteger)numberOfMinorScaleInRulerView:(DYRulerView *)rulerView
 {
-    return 12;
+    return 10;
 }
 
 - (CGFloat)spacingBetweenMinorScaleInRulerView:(DYRulerView *)rulerView
@@ -72,7 +72,7 @@
 
 - (BOOL)rulerViewShouldShowMinorScale:(DYRulerView *)rulerView
 {
-    return YES;
+    return NO;
 }
 
 - (CGSize)sizeForMinorScaleViewInRulerView:(DYRulerView *)rulerView
@@ -80,9 +80,9 @@
     return CGSizeMake(2, 20);
 }
 
-- (void)rulerView:(DYRulerView *)rulerView didChangeScale:(float)scale
+- (void)rulerView:(DYRulerView *)rulerView didChangeScaleWithMajorScale:(int)majorScale minorScale:(int)minorScale
 {
-    self.label.text = [NSString stringWithFormat:@"%.2f", scale];
+    self.label.text = [NSString stringWithFormat:@"%@/%@", @(majorScale+[self.majorScales[0] integerValue]), @(minorScale)];
 }
 
 @end

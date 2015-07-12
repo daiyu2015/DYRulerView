@@ -21,9 +21,9 @@ CGFloat const PointerImageViewWidth = 4.0f;
 
 @property (nonatomic) NSInteger minorScaleCount;
 @property (nonatomic) NSInteger scaleSpacing;
-@property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic) CGSize minorScaleSize;
 @property (nonatomic) BOOL isShowMinorScale;
+@property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic, strong) UIFont *majorScaleFont;
 
 @end
@@ -123,11 +123,13 @@ CGFloat const PointerImageViewWidth = 4.0f;
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    NSLog(@"scrollViewDidEndDecelerating%f", scrollView.contentOffset.x);
-    float scale = (scrollView.contentOffset.x)/self.scaleSpacing+self.minValue;
-    if (scale >= self.minValue && scale <= self.maxValue) {
-        if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScale:)]) {
-            [self.delegate rulerView:self didChangeScale:scale];
+    NSLog(@"scrollViewDidEndDragging%f", scrollView.contentOffset.x);
+    float accurateScale = (scrollView.contentOffset.x)/(self.scaleSpacing*self.minorScaleCount);
+    float inaccurateScale = round(accurateScale*self.minorScaleCount)/self.minorScaleCount;
+    scrollView.contentOffset = CGPointMake((inaccurateScale)*self.scaleSpacing*self.minorScaleCount, 0);
+    if (accurateScale >= 0 && accurateScale <= self.maxValue-self.minValue) {
+        if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScaleWithMajorScale:minorScale:)]) {
+            [self.delegate rulerView:self didChangeScaleWithMajorScale:(int)inaccurateScale minorScale:(int)fmod(inaccurateScale*self.minorScaleCount, self.minorScaleCount)];
         }
     }
 }
@@ -135,10 +137,14 @@ CGFloat const PointerImageViewWidth = 4.0f;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     NSLog(@"scrollViewDidEndDragging%f", scrollView.contentOffset.x);
-    float scale = (scrollView.contentOffset.x)/self.scaleSpacing+self.minValue;
-    if (scale >= self.minValue && scale <= self.maxValue) {
-        if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScale:)]) {
-            [self.delegate rulerView:self didChangeScale:scale];
+    if (!decelerate) {
+        float accurateScale = (scrollView.contentOffset.x)/(self.scaleSpacing*self.minorScaleCount);
+        float inaccurateScale = round(accurateScale*self.minorScaleCount)/self.minorScaleCount;
+        scrollView.contentOffset = CGPointMake((inaccurateScale)*self.scaleSpacing*self.minorScaleCount, 0);
+        if (accurateScale >= 0 && accurateScale <= self.maxValue-self.minValue) {
+            if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScaleWithMajorScale:minorScale:)]) {
+                [self.delegate rulerView:self didChangeScaleWithMajorScale:(int)inaccurateScale minorScale:(int)fmod(inaccurateScale*self.minorScaleCount, self.minorScaleCount)];
+            }
         }
     }
 }

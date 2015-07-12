@@ -46,6 +46,6 @@ extern CGFloat const PointerImageViewWidth;
 // 小刻度的尺寸
 - (CGSize)sizeForMinorScaleViewInRulerView:(DYRulerView *)rulerView;
 // 选择刻度
-- (void)rulerView:(DYRulerView *)rulerView didChangeScale:(float)scale;
+- (void)rulerView:(DYRulerView *)rulerView didChangeScaleWithMajorScale:(int)majorScale minorScale:(int)minorScale;
 
 @end
