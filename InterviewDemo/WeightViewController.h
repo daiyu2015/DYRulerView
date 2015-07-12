@@ -1,14 +1,13 @@
 //
-//  ViewController.h
+//  WeightViewController.h
 //  InterviewDemo
 //
-//  Created by 代雨 on 15/7/11.
+//  Created by 代雨 on 15/7/12.
 //  Copyright (c) 2015年 代雨. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface WeightViewController : UIViewController
 
 @end
-

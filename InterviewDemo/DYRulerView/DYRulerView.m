@@ -28,33 +28,44 @@
 
 @implementation DYRulerView
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if (self = [super initWithCoder:aDecoder]) {
+        [self createSubViews];
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        
-        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
-        self.collectionView.backgroundColor = [UIColor blueColor];
-        self.collectionView.dataSource = self;
-        self.collectionView.delegate = self;
-        [self.collectionView registerClass:[DYRulerCollectionViewCell class]  forCellWithReuseIdentifier:@"DYRulerCollectionViewCell"];
-        self.collectionView.showsHorizontalScrollIndicator = NO;
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-        self.collectionView.backgroundColor = [UIColor blueColor];
-        [self addSubview:self.collectionView];
-        
-        NSDictionary *nameMap = @{ @"collectionView" : self.collectionView };
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[collectionView]|" options:0 metrics:nil views:nameMap]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|" options:0 metrics:nil views:nameMap]];
-            
-        self.pointerImageView = [[UIImageView alloc] init];
-        self.pointerImageView.backgroundColor = [UIColor whiteColor];
-        self.pointerImageView.translatesAutoresizingMaskIntoConstraints = NO;
-        [self addSubview:self.pointerImageView];
-        
+        [self createSubViews];
     }
     return self;
+}
+
+- (void)createSubViews
+{
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+    self.collectionView.backgroundColor = [UIColor blueColor];
+    self.collectionView.dataSource = self;
+    self.collectionView.delegate = self;
+    [self.collectionView registerClass:[DYRulerCollectionViewCell class]  forCellWithReuseIdentifier:@"DYRulerCollectionViewCell"];
+    self.collectionView.showsHorizontalScrollIndicator = NO;
+    self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.collectionView.backgroundColor = [UIColor blueColor];
+    [self addSubview:self.collectionView];
+    
+    NSDictionary *nameMap = @{ @"collectionView" : self.collectionView };
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[collectionView]|" options:0 metrics:nil views:nameMap]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|" options:0 metrics:nil views:nameMap]];
+    
+    self.pointerImageView = [[UIImageView alloc] init];
+    self.pointerImageView.backgroundColor = [UIColor whiteColor];
+    self.pointerImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:self.pointerImageView];
 }
 
 - (void)layoutSubviews

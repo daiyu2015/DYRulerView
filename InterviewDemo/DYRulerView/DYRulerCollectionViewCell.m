@@ -58,17 +58,29 @@
 {
     for (NSInteger index=initialCount; index<totalCount; index++) {
         UIView *view = [[UIView alloc] init];
+        view.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *metricsMap;
+        NSDictionary *nameMap = @{ @"view" : view };
         if (index == 1) {
-            view.frame = CGRectMake(index*self.scaleSpacing-0.5*self.majorScaleSize.width, 1, self.majorScaleSize.width, self.majorScaleSize.height);
+            metricsMap = @{ @"height" : @(self.majorScaleSize.height),
+                            @"width" : @(self.majorScaleSize.width),
+                            @"left" : @(index*self.scaleSpacing-0.5*self.majorScaleSize.width) };
         } else {
             if (self.isShowMinorScale) {
-                view.frame = CGRectMake(index*self.scaleSpacing-0.5*self.minorScaleSize.width, 1, self.minorScaleSize.width, self.minorScaleSize.height);
+                metricsMap = @{ @"height" : @(self.minorScaleSize.height),
+                                @"width" : @(self.minorScaleSize.width),
+                                @"left" : @(index*self.scaleSpacing-0.5*self.minorScaleSize.width) };
             } else {
                 view.frame = CGRectZero;
             }
         }
         view.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:view];
+        
+        if (metricsMap) {
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-1-[view(==height)]" options:0 metrics:metricsMap views:nameMap]];
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-left-[view(==width)]" options:0 metrics:metricsMap views:nameMap]];
+        }
     }
 }
 

@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "WeightViewController.h"
+#import "BirthdayViewController.h"
 
 @interface AppDelegate ()
 
@@ -21,8 +22,14 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    ViewController *viewController = [[ViewController alloc] init];
-    self.window.rootViewController = viewController;
+    UITabBarController *tabBarController = [[UITabBarController alloc] init];
+    WeightViewController *weightViewController = [[WeightViewController alloc] init];
+    weightViewController.tabBarItem.title = @"体重";
+    BirthdayViewController *birthdayViewController = [[BirthdayViewController alloc] init];
+    birthdayViewController.tabBarItem.title = @"生日";
+    tabBarController.viewControllers = @[weightViewController, birthdayViewController];
+    
+    self.window.rootViewController = tabBarController;
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

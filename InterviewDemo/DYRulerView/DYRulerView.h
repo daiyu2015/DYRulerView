@@ -13,12 +13,10 @@
 
 @property (nonatomic, strong) UIImageView *pointerImageView;
 
-@property (nonatomic, weak) id <DYRulerViewDataSource> dataSource;
-@property (nonatomic, weak) id <DYRulerViewDelegate> delegate;
+@property (nonatomic, weak) IBOutlet id <DYRulerViewDataSource> dataSource;
+@property (nonatomic, weak) IBOutlet id <DYRulerViewDelegate> delegate;
 
 - (void)reloadData;
-
-- (instancetype)initWithFrame:(CGRect)frame;
 
 @end
 
