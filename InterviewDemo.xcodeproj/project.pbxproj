@@ -426,6 +426,7 @@
 				6EA6146B1B50E36400220F48 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6EA6146C1B50E36400220F48 /* Build configuration list for PBXNativeTarget "InterviewDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -434,6 +435,7 @@
 				6EA6146E1B50E36400220F48 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

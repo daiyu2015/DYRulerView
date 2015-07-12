@@ -22,15 +22,13 @@
 {
     [super viewDidLoad];
     
-    CGFloat deviceWidth = [UIScreen mainScreen].bounds.size.width;
-    
     NSMutableArray *majorScales = [NSMutableArray array];
     for (NSInteger index=0; index<300; index+=10) {
         [majorScales addObject:@(index)];
     }
     self.majorScales = majorScales;
 
-    DYRulerView *rulerView = [[DYRulerView alloc] initWithFrame:CGRectMake(0, 150, deviceWidth, CollectionViewHeight)];
+    DYRulerView *rulerView = [[DYRulerView alloc] initWithFrame:CGRectMake(0, 150, [UIScreen mainScreen].bounds.size.width, 140)];
     rulerView.delegate = self;
     rulerView.dataSource = self;
     [self.view addSubview:rulerView];
@@ -49,6 +47,11 @@
 }
 
 #pragma mark - DYRulerViewDataSource
+- (CGFloat)heightForRulerView:(DYRulerView *)rulerView
+{
+    return 140.0f;
+}
+
 - (NSArray *)majorScalesInRulerView:(DYRulerView *)rulerView
 {
     return self.majorScales;
@@ -65,6 +68,11 @@
 }
 
 #pragma mark - DYRulerViewDelegate
+- (CGSize)rulerView:(DYRulerView *)rulerView sizeForPointerImageView:(UIImageView *)pointerImageView
+{
+    return CGSizeMake(8, 60);
+}
+
 - (UIFont *)fontForMajorScaleInRulerView:(DYRulerView *)rulerView
 {
     return [UIFont boldSystemFontOfSize:20];
@@ -72,7 +80,7 @@
 
 - (BOOL)rulerViewShouldShowMinorScale:(DYRulerView *)rulerView
 {
-    return NO;
+    return YES;
 }
 
 - (CGSize)sizeForMinorScaleViewInRulerView:(DYRulerView *)rulerView
@@ -82,7 +90,7 @@
 
 - (void)rulerView:(DYRulerView *)rulerView didChangeScaleWithMajorScale:(int)majorScale minorScale:(int)minorScale
 {
-    self.label.text = [NSString stringWithFormat:@"%@/%@", @(majorScale+[self.majorScales[0] integerValue]), @(minorScale)];
+    self.label.text = [NSString stringWithFormat:@"%@/%@", @(majorScale), @(minorScale)];
 }
 
 @end

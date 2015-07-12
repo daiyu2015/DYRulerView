@@ -8,10 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-extern CGFloat const CollectionViewHeight;
-extern CGFloat const PointerImageViewHeight;
-extern CGFloat const PointerImageViewWidth;
-
 @protocol DYRulerViewDataSource, DYRulerViewDelegate;
 @interface DYRulerView : UIView
 
@@ -33,13 +29,17 @@ extern CGFloat const PointerImageViewWidth;
 - (NSInteger)numberOfMinorScaleInRulerView:(DYRulerView *)rulerView;
 // 小刻度的间距
 - (CGFloat)spacingBetweenMinorScaleInRulerView:(DYRulerView *)rulerView;
+// 刻度尺高度
+- (CGFloat)heightForRulerView:(DYRulerView *)rulerView;
 
 @end
 
 @protocol DYRulerViewDelegate <NSObject>
 
 @optional
-// 大刻度字体
+// 指针的尺寸
+- (CGSize)rulerView:(DYRulerView *)rulerView sizeForPointerImageView:(UIImageView *)pointerImageView;
+// 刻度字体
 - (UIFont *)fontForMajorScaleInRulerView:(DYRulerView *)rulerView;
 // 是否显示小刻度
 - (BOOL)rulerViewShouldShowMinorScale:(DYRulerView *)rulerView;

@@ -9,10 +9,6 @@
 #import "DYRulerView.h"
 #import "DYRulerCollectionViewCell.h"
 
-CGFloat const CollectionViewHeight = 140.0f;
-CGFloat const PointerImageViewHeight = 50.0f;
-CGFloat const PointerImageViewWidth = 4.0f;
-
 @interface DYRulerView() <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, DYRulerViewDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -25,6 +21,8 @@ CGFloat const PointerImageViewWidth = 4.0f;
 @property (nonatomic) BOOL isShowMinorScale;
 @property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic, strong) UIFont *majorScaleFont;
+@property (nonatomic) CGFloat viewHeight;
+@property (nonatomic) CGSize pointerSize;
 
 @end
 
@@ -36,20 +34,36 @@ CGFloat const PointerImageViewWidth = 4.0f;
         
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height) collectionViewLayout:flowLayout];
+        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
         self.collectionView.backgroundColor = [UIColor blueColor];
         self.collectionView.dataSource = self;
         self.collectionView.delegate = self;
         [self.collectionView registerClass:[DYRulerCollectionViewCell class]  forCellWithReuseIdentifier:@"DYRulerCollectionViewCell"];
         self.collectionView.showsHorizontalScrollIndicator = NO;
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.collectionView];
+        
+        NSDictionary *nameMap = @{ @"collectionView" : self.collectionView };
+        NSArray *horizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[collectionView]|" options:0 metrics:nil views:nameMap];
+        NSArray *verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|" options:0 metrics:nil views:nameMap];
+        [self addConstraints:horizontalConstraints];
+        [self addConstraints:verticalConstraints];
             
-        self.pointerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(frame.size.width/2-PointerImageViewWidth/2, frame.size.height-PointerImageViewHeight, PointerImageViewWidth, PointerImageViewHeight)];
+        self.pointerImageView = [[UIImageView alloc] init];
         self.pointerImageView.backgroundColor = [UIColor whiteColor];
+        self.pointerImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:self.pointerImageView];
         
     }
     return self;
+}
+
+- (void)addConstraintForPointerImageView
+{
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:0 constant:self.pointerSize.height]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0 constant:self.pointerSize.width]];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -58,6 +72,16 @@ CGFloat const PointerImageViewWidth = 4.0f;
     self.majorScales = [self.dataSource majorScalesInRulerView:self];
     self.minorScaleCount = [self.dataSource numberOfMinorScaleInRulerView:self];
     self.scaleSpacing = [self.dataSource spacingBetweenMinorScaleInRulerView:self];
+    self.viewHeight = [self.dataSource heightForRulerView:self];
+    
+    // 指针视图尺寸
+    if ([self.delegate respondsToSelector:@selector(rulerView:sizeForPointerImageView:)]) {
+        self.pointerSize = [self.delegate rulerView:self sizeForPointerImageView:self.pointerImageView];
+    } else {
+        self.pointerSize = CGSizeMake(4, 50);
+    }
+    // 指针视图添加约束
+    [self addConstraintForPointerImageView];
     
     // 小刻度尺寸
     if ([self.delegate respondsToSelector:@selector(sizeForMinorScaleViewInRulerView:)]) {
@@ -102,11 +126,11 @@ CGFloat const PointerImageViewWidth = 4.0f;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        return CGSizeMake(self.frame.size.width*0.5-self.scaleSpacing, CollectionViewHeight);
+        return CGSizeMake(self.frame.size.width*0.5-self.scaleSpacing, self.viewHeight);
     } else if (indexPath.row == self.majorScales.count) {
-        return CGSizeMake(self.frame.size.width*0.5+self.scaleSpacing, CollectionViewHeight);
+        return CGSizeMake(self.frame.size.width*0.5+self.scaleSpacing, self.viewHeight);
     } else {
-        return CGSizeMake(self.minorScaleCount*self.scaleSpacing, CollectionViewHeight);
+        return CGSizeMake(self.minorScaleCount*self.scaleSpacing, self.viewHeight);
     }
 }
 
