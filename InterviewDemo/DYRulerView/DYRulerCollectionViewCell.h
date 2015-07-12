@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-extern CGFloat const ScaleLineHeight;
-extern CGFloat const ScaleLineWidth;
-extern CGFloat const ScaleSpacing;
-
 @interface DYRulerCollectionViewCell : UICollectionViewCell
 
-- (void)configureWithIndexPath:(NSIndexPath *)indexPath minValue:(NSInteger)minValue maxValue:(NSInteger)maxValue;
+@property (nonatomic) NSInteger minorScaleCount;
+@property (nonatomic) NSInteger scaleSpacing;
+@property (nonatomic, copy) NSArray *majorScales;
+@property (nonatomic) CGSize minorScaleSize;
+@property (nonatomic) BOOL isShowMinorScale;
+@property (nonatomic, strong) UIFont *majorScaleFont;
+
+- (void)configureWithIndexPath:(NSIndexPath *)indexPath;
 
 @end

@@ -18,21 +18,21 @@ CGFloat const PointerImageViewWidth = 4.0f;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic) NSInteger minValue;
 @property (nonatomic) NSInteger maxValue;
-@property (nonatomic) NSInteger spacing;
-@property (nonatomic) NSInteger numberOfItems;
+
+@property (nonatomic) NSInteger minorScaleCount;
+@property (nonatomic) NSInteger scaleSpacing;
+@property (nonatomic, copy) NSArray *majorScales;
+@property (nonatomic) CGSize minorScaleSize;
+@property (nonatomic) BOOL isShowMinorScale;
+@property (nonatomic, strong) UIFont *majorScaleFont;
 
 @end
 
 @implementation DYRulerView
 
-- (instancetype)initWithFrame:(CGRect)frame minValue:(NSInteger)minValue maxValue:(NSInteger)maxValue spacing:(NSInteger)spacing
+- (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        
-        self.minValue = minValue;
-        self.maxValue = maxValue;
-        self.spacing = spacing;
-        self.numberOfItems = self.maxValue-self.minValue+2;
         
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -55,14 +55,46 @@ CGFloat const PointerImageViewWidth = 4.0f;
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.numberOfItems;
+    self.majorScales = [self.dataSource majorScalesInRulerView:self];
+    self.minorScaleCount = [self.dataSource numberOfMinorScaleInRulerView:self];
+    self.scaleSpacing = [self.dataSource spacingBetweenMinorScaleInRulerView:self];
+    
+    // 小刻度尺寸
+    if ([self.delegate respondsToSelector:@selector(sizeForMinorScaleViewInRulerView:)]) {
+        self.minorScaleSize = [self.delegate sizeForMinorScaleViewInRulerView:self];
+    } else {
+        self.minorScaleSize = CGSizeMake(1, 10);
+    }
+    
+    // 是否显示小刻度
+    if ([self.delegate respondsToSelector:@selector(rulerViewShouldShowMinorScale:)]) {
+        self.isShowMinorScale = [self.delegate rulerViewShouldShowMinorScale:self];
+    } else {
+        self.isShowMinorScale = YES;
+    }
+    
+    // 大刻度字体
+    if ([self.delegate respondsToSelector:@selector(fontForMajorScaleInRulerView:)]) {
+        self.majorScaleFont = [self.delegate fontForMajorScaleInRulerView:self];
+    }
+    
+    self.minValue = [self.majorScales[0] integerValue];
+    self.maxValue = [self.majorScales[self.majorScales.count-1] integerValue];
+    
+    return self.majorScales.count+1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"DYRulerCollectionViewCell";
     DYRulerCollectionViewCell *rulerCollectionViewCell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    [rulerCollectionViewCell configureWithIndexPath:indexPath minValue:self.minValue maxValue:self.maxValue];
+    rulerCollectionViewCell.majorScales = self.majorScales;
+    rulerCollectionViewCell.scaleSpacing = self.scaleSpacing;
+    rulerCollectionViewCell.minorScaleCount = self.minorScaleCount;
+    rulerCollectionViewCell.minorScaleSize = self.minorScaleSize;
+    rulerCollectionViewCell.isShowMinorScale = self.isShowMinorScale;
+    rulerCollectionViewCell.majorScaleFont = self.majorScaleFont;
+    [rulerCollectionViewCell configureWithIndexPath:indexPath];
     return rulerCollectionViewCell;
 }
 
@@ -70,11 +102,11 @@ CGFloat const PointerImageViewWidth = 4.0f;
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        return CGSizeMake(self.frame.size.width*0.5-ScaleSpacing, CollectionViewHeight);
-    } else if (indexPath.row == self.numberOfItems-1) {
-        return CGSizeMake(self.frame.size.width*0.5+ScaleSpacing, CollectionViewHeight);
+        return CGSizeMake(self.frame.size.width*0.5-self.scaleSpacing, CollectionViewHeight);
+    } else if (indexPath.row == self.majorScales.count) {
+        return CGSizeMake(self.frame.size.width*0.5+self.scaleSpacing, CollectionViewHeight);
     } else {
-        return CGSizeMake(10*ScaleSpacing, CollectionViewHeight);
+        return CGSizeMake(self.minorScaleCount*self.scaleSpacing, CollectionViewHeight);
     }
 }
 
@@ -92,7 +124,7 @@ CGFloat const PointerImageViewWidth = 4.0f;
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     NSLog(@"scrollViewDidEndDecelerating%f", scrollView.contentOffset.x);
-    float scale = (scrollView.contentOffset.x)/(ScaleSpacing*self.spacing)+self.minValue;
+    float scale = (scrollView.contentOffset.x)/self.scaleSpacing+self.minValue;
     if (scale >= self.minValue && scale <= self.maxValue) {
         if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScale:)]) {
             [self.delegate rulerView:self didChangeScale:scale];
@@ -103,7 +135,7 @@ CGFloat const PointerImageViewWidth = 4.0f;
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     NSLog(@"scrollViewDidEndDragging%f", scrollView.contentOffset.x);
-    float scale = (scrollView.contentOffset.x)/(ScaleSpacing*self.spacing)+self.minValue;
+    float scale = (scrollView.contentOffset.x)/self.scaleSpacing+self.minValue;
     if (scale >= self.minValue && scale <= self.maxValue) {
         if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScale:)]) {
             [self.delegate rulerView:self didChangeScale:scale];

@@ -9,9 +9,10 @@
 #import "ViewController.h"
 #import "DYRulerView.h"
 
-@interface ViewController () <DYRulerViewDelegate>
+@interface ViewController () <DYRulerViewDelegate, DYRulerViewDataSource>
 
 @property (nonatomic, strong) UILabel *label;
+@property (nonatomic, copy) NSArray *majorScales;
 
 @end
 
@@ -23,19 +24,21 @@
     
     CGFloat deviceWidth = [UIScreen mainScreen].bounds.size.width;
     
-    NSInteger maxValue = 1100;
-    NSInteger minValue = 1000;
-    NSInteger spacing = 10;
-    
-    DYRulerView *rulerView = [[DYRulerView alloc] initWithFrame:CGRectMake(0, 150, deviceWidth, CollectionViewHeight) minValue:minValue maxValue:maxValue spacing:spacing];
+    NSMutableArray *majorScales = [NSMutableArray array];
+    for (NSInteger index=0; index<300; index+=10) {
+        [majorScales addObject:@(index)];
+    }
+    self.majorScales = majorScales;
+
+    DYRulerView *rulerView = [[DYRulerView alloc] initWithFrame:CGRectMake(0, 150, deviceWidth, CollectionViewHeight)];
     rulerView.delegate = self;
+    rulerView.dataSource = self;
     [self.view addSubview:rulerView];
     
     self.label = [[UILabel alloc] initWithFrame:CGRectMake(110, 400, 100, 30)];
     self.label.textAlignment = NSTextAlignmentCenter;
     self.label.backgroundColor = [UIColor blackColor];
     self.label.textColor = [UIColor whiteColor];
-    self.label.text = [NSString stringWithFormat:@"%@", @((maxValue+minValue)*.5)];
     [self.view addSubview:self.label];
 }
 
@@ -45,7 +48,38 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - RulerViewDelegate
+#pragma mark - DYRulerViewDataSource
+- (NSArray *)majorScalesInRulerView:(DYRulerView *)rulerView
+{
+    return self.majorScales;
+}
+
+- (NSInteger)numberOfMinorScaleInRulerView:(DYRulerView *)rulerView
+{
+    return 12;
+}
+
+- (CGFloat)spacingBetweenMinorScaleInRulerView:(DYRulerView *)rulerView
+{
+    return 20;
+}
+
+#pragma mark - DYRulerViewDelegate
+- (UIFont *)fontForMajorScaleInRulerView:(DYRulerView *)rulerView
+{
+    return [UIFont boldSystemFontOfSize:20];
+}
+
+- (BOOL)rulerViewShouldShowMinorScale:(DYRulerView *)rulerView
+{
+    return YES;
+}
+
+- (CGSize)sizeForMinorScaleViewInRulerView:(DYRulerView *)rulerView
+{
+    return CGSizeMake(2, 20);
+}
+
 - (void)rulerView:(DYRulerView *)rulerView didChangeScale:(float)scale
 {
     self.label.text = [NSString stringWithFormat:@"%.2f", scale];

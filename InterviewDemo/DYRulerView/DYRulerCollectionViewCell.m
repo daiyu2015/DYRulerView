@@ -8,10 +8,6 @@
 
 #import "DYRulerCollectionViewCell.h"
 
-CGFloat const ScaleLineHeight = 10.0f;
-CGFloat const ScaleLineWidth = 1.0f;
-CGFloat const ScaleSpacing = 20.0f;
-
 @interface DYRulerCollectionViewCell ()
 
 @property (nonatomic, strong) UILabel *label;
@@ -30,36 +26,45 @@ CGFloat const ScaleSpacing = 20.0f;
     return self;
 }
 
-- (void)configureWithIndexPath:(NSIndexPath *)indexPath minValue:(NSInteger)minValue maxValue:(NSInteger)maxValue
+- (void)configureWithIndexPath:(NSIndexPath *)indexPath
 {
     for (UIView *view in self.contentView.subviews) {
         [view removeFromSuperview];
     }
-    self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, MAX(ScaleSpacing*2, 40), 20)];
+    self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, self.minorScaleSize.height*2+10, MAX(self.scaleSpacing*2, 40), 20)];
     self.label.textColor = [UIColor whiteColor];
+    if (self.majorScaleFont) {
+        self.label.font = self.majorScaleFont;
+    }
     self.label.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:self.label];
     self.label.hidden = NO;
-    self.label.text = [NSString stringWithFormat:@"%@", @(indexPath.row-1+minValue)];
+    if (indexPath.row > 0) {
+        self.label.text = [NSString stringWithFormat:@"%@", self.majorScales[indexPath.row-1]];
+    }
+    [self.contentView addSubview:self.label];
     if (indexPath.row == 0) {
         self.label.hidden = YES;
     } else if (indexPath.row == 1) {
-        [self createScaleViewWithInitialCount:1 totalCount:11 scaleSpacing:ScaleSpacing];
-    } else if (indexPath.row == maxValue-minValue+1) {
-        [self createScaleViewWithInitialCount:0 totalCount:2 scaleSpacing:ScaleSpacing];
+        [self createScaleViewWithInitialCount:1 totalCount:self.minorScaleCount+1];
+    } else if (indexPath.row == self.majorScales.count) {
+        [self createScaleViewWithInitialCount:0 totalCount:2];
     } else {
-        [self createScaleViewWithInitialCount:0 totalCount:11 scaleSpacing:ScaleSpacing];
+        [self createScaleViewWithInitialCount:0 totalCount:self.minorScaleCount+1];
     }
 }
 
-- (void)createScaleViewWithInitialCount:(NSInteger)initialCount totalCount:(NSInteger)totalCount scaleSpacing:(CGFloat)scaleSpacing
+- (void)createScaleViewWithInitialCount:(NSInteger)initialCount totalCount:(NSInteger)totalCount
 {
     for (NSInteger index=initialCount; index<totalCount; index++) {
         UIView *view = [[UIView alloc] init];
         if (index == 1) {
-            view.frame = CGRectMake(index*scaleSpacing-2*ScaleLineWidth, 1, 2*ScaleLineWidth, 2*ScaleLineHeight);
+            view.frame = CGRectMake(index*self.scaleSpacing-self.minorScaleSize.width, 1, 2*self.minorScaleSize.width, 2*self.minorScaleSize.height);
         } else {
-            view.frame = CGRectMake(index*scaleSpacing-ScaleLineWidth, 1, ScaleLineWidth, ScaleLineHeight);
+            if (self.isShowMinorScale) {
+                view.frame = CGRectMake(index*self.scaleSpacing-0.5*self.minorScaleSize.width, 1, self.minorScaleSize.width, self.minorScaleSize.height);
+            } else {
+                view.frame = CGRectZero;
+            }
         }
         view.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:view];
