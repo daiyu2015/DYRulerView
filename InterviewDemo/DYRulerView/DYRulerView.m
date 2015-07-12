@@ -22,7 +22,6 @@
 @property (nonatomic) BOOL isShowMinorScale;
 @property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic, strong) UIFont *majorScaleFont;
-@property (nonatomic) CGFloat viewHeight;
 @property (nonatomic) CGSize pointerSize;
 
 @end
@@ -68,8 +67,12 @@
 {
     self.majorScales = [self.dataSource majorScalesInRulerView:self];
     self.minorScaleCount = [self.dataSource numberOfMinorScaleInRulerView:self];
-    self.scaleSpacing = [self.dataSource spacingBetweenMinorScaleInRulerView:self];
-    self.viewHeight = [self.dataSource heightForRulerView:self];
+    
+    if ([self.delegate respondsToSelector:@selector(spacingBetweenMinorScaleInRulerView:)]) {
+        self.scaleSpacing = MAX([self.delegate spacingBetweenMinorScaleInRulerView:self], 10);
+    } else {
+        self.scaleSpacing = 15;
+    }
     
     // 指针视图尺寸
     if ([self.delegate respondsToSelector:@selector(rulerView:sizeForPointerImageView:)]) {
@@ -153,11 +156,11 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        return CGSizeMake(self.frame.size.width*0.5-self.scaleSpacing, self.viewHeight);
+        return CGSizeMake(self.frame.size.width*0.5-self.scaleSpacing, self.collectionView.frame.size.height);
     } else if (indexPath.row == self.majorScales.count) {
-        return CGSizeMake(self.frame.size.width*0.5+self.scaleSpacing, self.viewHeight);
+        return CGSizeMake(self.frame.size.width*0.5+self.scaleSpacing, self.collectionView.frame.size.height);
     } else {
-        return CGSizeMake(self.minorScaleCount*self.scaleSpacing, self.viewHeight);
+        return CGSizeMake(self.minorScaleCount*self.scaleSpacing, self.collectionView.frame.size.height);
     }
 }
 

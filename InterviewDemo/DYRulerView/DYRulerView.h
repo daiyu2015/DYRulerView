@@ -29,16 +29,14 @@
 - (NSArray *)majorScalesInRulerView:(DYRulerView *)rulerView;
 // 小刻度的数量
 - (NSInteger)numberOfMinorScaleInRulerView:(DYRulerView *)rulerView;
-// 小刻度的间距
-- (CGFloat)spacingBetweenMinorScaleInRulerView:(DYRulerView *)rulerView;
-// 刻度尺高度
-- (CGFloat)heightForRulerView:(DYRulerView *)rulerView;
 
 @end
 
 @protocol DYRulerViewDelegate <NSObject>
 
 @optional
+// 小刻度的间距
+- (CGFloat)spacingBetweenMinorScaleInRulerView:(DYRulerView *)rulerView;
 // 指针的尺寸
 - (CGSize)rulerView:(DYRulerView *)rulerView sizeForPointerImageView:(UIImageView *)pointerImageView;
 // 刻度字体
