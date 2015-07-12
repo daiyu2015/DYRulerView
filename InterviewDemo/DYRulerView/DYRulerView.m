@@ -41,13 +41,12 @@
         [self.collectionView registerClass:[DYRulerCollectionViewCell class]  forCellWithReuseIdentifier:@"DYRulerCollectionViewCell"];
         self.collectionView.showsHorizontalScrollIndicator = NO;
         self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+        self.collectionView.backgroundColor = [UIColor blueColor];
         [self addSubview:self.collectionView];
         
         NSDictionary *nameMap = @{ @"collectionView" : self.collectionView };
-        NSArray *horizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[collectionView]|" options:0 metrics:nil views:nameMap];
-        NSArray *verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|" options:0 metrics:nil views:nameMap];
-        [self addConstraints:horizontalConstraints];
-        [self addConstraints:verticalConstraints];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[collectionView]|" options:0 metrics:nil views:nameMap]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[collectionView]|" options:0 metrics:nil views:nameMap]];
             
         self.pointerImageView = [[UIImageView alloc] init];
         self.pointerImageView.backgroundColor = [UIColor whiteColor];
@@ -61,9 +60,12 @@
 - (void)addConstraintForPointerImageView
 {
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeHeight multiplier:0 constant:self.pointerSize.height]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0 constant:self.pointerSize.width]];
+    
+    NSDictionary *metricsMap = @{ @"width" : @(self.pointerSize.width),
+                                  @"height" : @(self.pointerSize.height) };
+    NSDictionary *nameMap = @{ @"pointerImageView" : self.pointerImageView };
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[pointerImageView(==width)]" options:0 metrics:metricsMap views:nameMap]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[pointerImageView(==height)]|" options:0 metrics:metricsMap views:nameMap]];
 }
 
 - (void)configureDataSource
@@ -160,7 +162,7 @@
     NSLog(@"scrollViewDidEndDragging%f", scrollView.contentOffset.x);
     float accurateScale = (scrollView.contentOffset.x)/(self.scaleSpacing*self.minorScaleCount);
     float inaccurateScale = round(accurateScale*self.minorScaleCount)/self.minorScaleCount;
-    scrollView.contentOffset = CGPointMake((inaccurateScale)*self.scaleSpacing*self.minorScaleCount, 0);
+    [scrollView setContentOffset:CGPointMake((inaccurateScale)*self.scaleSpacing*self.minorScaleCount, 0) animated:YES];
     if (accurateScale >= 0 && accurateScale <= self.maxValue-self.minValue) {
         if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScaleWithMajorScale:minorScale:)]) {
             [self.delegate rulerView:self didChangeScaleWithMajorScale:(int)inaccurateScale minorScale:(int)fmod(inaccurateScale*self.minorScaleCount, self.minorScaleCount)];
@@ -174,7 +176,7 @@
     if (!decelerate) {
         float accurateScale = (scrollView.contentOffset.x)/(self.scaleSpacing*self.minorScaleCount);
         float inaccurateScale = round(accurateScale*self.minorScaleCount)/self.minorScaleCount;
-        scrollView.contentOffset = CGPointMake((inaccurateScale)*self.scaleSpacing*self.minorScaleCount, 0);
+        [scrollView setContentOffset:CGPointMake((inaccurateScale)*self.scaleSpacing*self.minorScaleCount, 0) animated:YES];
         if (accurateScale >= 0 && accurateScale <= self.maxValue-self.minValue) {
             if ([self.delegate respondsToSelector:@selector(rulerView:didChangeScaleWithMajorScale:minorScale:)]) {
                 [self.delegate rulerView:self didChangeScaleWithMajorScale:(int)inaccurateScale minorScale:(int)fmod(inaccurateScale*self.minorScaleCount, self.minorScaleCount)];

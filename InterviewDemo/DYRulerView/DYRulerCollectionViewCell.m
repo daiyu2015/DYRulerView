@@ -19,11 +19,18 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        
-        self.backgroundColor = [UIColor blueColor];
-        
+                
     }
     return self;
+}
+
+- (void)addConstraintForPointerImageView
+{
+    NSDictionary *metricsMap = @{ @"height" : @(20) };
+    NSDictionary *nameMap = @{ @"label" : self.label };
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:self.scaleSpacing+self.minorScaleSize.width*0.5]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:self.minorScaleSize.height*2+20]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[label(==height)]" options:0 metrics:metricsMap views:nameMap]];
 }
 
 - (void)configureWithIndexPath:(NSIndexPath *)indexPath
@@ -32,9 +39,8 @@
         [view removeFromSuperview];
     }
     self.label = [[UILabel alloc] init];
-//    self.label.frame = CGRectMake(0, self.minorScaleSize.height*2+10, MAX(self.scaleSpacing*2, 40), 20);
-    self.label.center = CGPointMake(self.scaleSpacing+self.minorScaleSize.width*0.5, self.minorScaleSize.height*2+20);
-    self.label.bounds = CGRectMake(0, 0, MAX(self.scaleSpacing*2, 40), 20);
+    self.label.backgroundColor = [UIColor lightGrayColor];
+    self.label.translatesAutoresizingMaskIntoConstraints = NO;
     self.label.textColor = [UIColor whiteColor];
     if (self.majorScaleFont) {
         self.label.font = self.majorScaleFont;
@@ -45,6 +51,7 @@
         self.label.text = [NSString stringWithFormat:@"%@", self.majorScales[indexPath.row-1]];
     }
     [self.contentView addSubview:self.label];
+    [self addConstraintForPointerImageView];
     if (indexPath.row == 0) {
         self.label.hidden = YES;
     } else if (indexPath.row == 1) {
