@@ -23,10 +23,12 @@
 @protocol DYRulerViewDataSource <NSObject>
 
 @required
-// 大刻度数组
-- (NSArray *)majorScalesInRulerView:(DYRulerView *)rulerView;
-// 小刻度的数量
+// 大刻度数量
+- (NSInteger)numberOfMajorScaleInRulerView:(DYRulerView *)rulerView;
+// 小刻度数量
 - (NSInteger)numberOfMinorScaleInRulerView:(DYRulerView *)rulerView;
+// 刻度值
+- (NSString *)rulerView:(DYRulerView *)rulerView textOfMajorScaleAtIndex:(NSInteger)index;
 
 @end
 

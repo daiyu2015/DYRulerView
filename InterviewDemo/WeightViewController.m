@@ -12,7 +12,6 @@
 @interface WeightViewController () <DYRulerViewDelegate, DYRulerViewDataSource>
 
 @property (nonatomic, strong) UILabel *label;
-@property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic, strong) DYRulerView *rulerView;
 
 @end
@@ -22,12 +21,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSMutableArray *majorScales = [NSMutableArray array];
-    for (NSInteger index=0; index<300; index+=10) {
-        [majorScales addObject:@(index)];
-    }
-    self.majorScales = majorScales;
     
     self.rulerView = [[DYRulerView alloc] init];
     self.rulerView.delegate = self;
@@ -62,9 +55,9 @@
 }
 
 #pragma mark - DYRulerViewDataSource
-- (NSArray *)majorScalesInRulerView:(DYRulerView *)rulerView
+- (NSInteger)numberOfMajorScaleInRulerView:(DYRulerView *)rulerView
 {
-    return self.majorScales;
+    return 200;
 }
 
 - (NSInteger)numberOfMinorScaleInRulerView:(DYRulerView *)rulerView
@@ -72,7 +65,18 @@
     return 10;
 }
 
+- (NSString *)rulerView:(DYRulerView *)rulerView textOfMajorScaleAtIndex:(NSInteger)index
+{
+    return [NSString stringWithFormat:@"%@", @(index+1)];
+}
+
+
 #pragma mark - DYRulerViewDelegate
+- (CGFloat)spacingBetweenMinorScaleInRulerView:(DYRulerView *)rulerView
+{
+    return 15;
+}
+
 - (CGSize)rulerView:(DYRulerView *)rulerView sizeForPointerImageView:(UIImageView *)pointerImageView
 {
     return CGSizeMake(8, 60);
@@ -100,7 +104,7 @@
 
 - (void)rulerView:(DYRulerView *)rulerView didChangeScaleWithMajorScale:(int)majorScale minorScale:(int)minorScale
 {
-    self.label.text = [NSString stringWithFormat:@"%@/%@", @(majorScale), @(minorScale)];
+    self.label.text = [NSString stringWithFormat:@"%@/%@", @(majorScale+1), @(minorScale)];
 }
 
 @end

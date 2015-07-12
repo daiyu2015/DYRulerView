@@ -8,13 +8,12 @@
 
 #import "BirthdayViewController.h"
 #import "DYRulerView.h"
+#import "NSDate+DateTools.h"
 
 @interface BirthdayViewController () <DYRulerViewDelegate, DYRulerViewDataSource>
 
 @property (nonatomic, weak) IBOutlet DYRulerView *rulerView;
 @property (nonatomic, weak) IBOutlet UILabel *label;
-
-@property (nonatomic, copy) NSArray *majorScales;
 
 @end
 
@@ -23,12 +22,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    NSMutableArray *majorScales = [NSMutableArray array];
-    for (NSInteger index=1990; index<2015; index++) {
-        [majorScales addObject:@(index)];
-    }
-    self.majorScales = majorScales;
 }
 
 - (void)didReceiveMemoryWarning
@@ -38,9 +31,9 @@
 }
 
 #pragma mark - DYRulerViewDataSource
-- (NSArray *)majorScalesInRulerView:(DYRulerView *)rulerView
+- (NSInteger)numberOfMajorScaleInRulerView:(DYRulerView *)rulerView
 {
-    return self.majorScales;
+    return 21;
 }
 
 - (NSInteger)numberOfMinorScaleInRulerView:(DYRulerView *)rulerView
@@ -48,7 +41,17 @@
     return 12;
 }
 
+- (NSString *)rulerView:(DYRulerView *)rulerView textOfMajorScaleAtIndex:(NSInteger)index
+{
+    return [NSString stringWithFormat:@"%@", @([[NSDate date] year]-[self numberOfMajorScaleInRulerView:rulerView]+index+1)];
+}
+
 #pragma mark - DYRulerViewDelegate
+- (CGFloat)spacingBetweenMinorScaleInRulerView:(DYRulerView *)rulerView
+{
+    return 15;
+}
+
 - (CGSize)rulerView:(DYRulerView *)rulerView sizeForPointerImageView:(UIImageView *)pointerImageView
 {
     return CGSizeMake(8, 60);
@@ -76,7 +79,7 @@
 
 - (void)rulerView:(DYRulerView *)rulerView didChangeScaleWithMajorScale:(int)majorScale minorScale:(int)minorScale
 {
-    self.label.text = [NSString stringWithFormat:@"%@/%@", @(majorScale), @(minorScale)];
+    self.label.text = [NSString stringWithFormat:@"%@/%@", @([[NSDate date] year]-[self numberOfMajorScaleInRulerView:rulerView]+majorScale+1), @(minorScale+1)];
 }
 
 @end

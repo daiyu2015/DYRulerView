@@ -10,14 +10,15 @@
 
 @interface DYRulerCollectionViewCell : UICollectionViewCell
 
+@property (nonatomic) NSInteger majorScaleCount;
 @property (nonatomic) NSInteger minorScaleCount;
 @property (nonatomic) NSInteger scaleSpacing;
-@property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic) CGSize minorScaleSize;
 @property (nonatomic) CGSize majorScaleSize;
 @property (nonatomic) BOOL isShowMinorScale;
 @property (nonatomic, strong) UIFont *majorScaleFont;
 @property (nonatomic) CGFloat pointerHeight;
+@property (nonatomic, strong) NSString  *labelText;
 
 - (void)configureWithIndexPath:(NSIndexPath *)indexPath;
 

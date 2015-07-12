@@ -39,15 +39,15 @@
     self.label.textAlignment = NSTextAlignmentCenter;
     self.label.hidden = NO;
     if (indexPath.row > 0) {
-        self.label.text = [NSString stringWithFormat:@"%@", self.majorScales[indexPath.row-1]];
+        self.label.text = self.labelText;
     }
     [self.contentView addSubview:self.label];
     [self addConstraintForLabel];
     if (indexPath.row == 0) {
         self.label.hidden = YES;
-    } else if (indexPath.row == 1) {
+    } else if (indexPath.item == 1) {
         [self createScaleViewWithInitialCount:1 totalCount:self.minorScaleCount+1];
-    } else if (indexPath.row == self.majorScales.count) {
+    } else if (indexPath.item == self.majorScaleCount) {
         [self createScaleViewWithInitialCount:0 totalCount:2];
     } else {
         [self createScaleViewWithInitialCount:0 totalCount:self.minorScaleCount+1];

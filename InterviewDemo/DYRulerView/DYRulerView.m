@@ -15,12 +15,12 @@
 @property (nonatomic) NSInteger minValue;
 @property (nonatomic) NSInteger maxValue;
 
+@property (nonatomic) NSInteger majorScaleCount;
 @property (nonatomic) NSInteger minorScaleCount;
 @property (nonatomic) NSInteger scaleSpacing;
 @property (nonatomic) CGSize minorScaleSize;
 @property (nonatomic) CGSize majorScaleSize;
 @property (nonatomic) BOOL isShowMinorScale;
-@property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic, strong) UIFont *majorScaleFont;
 @property (nonatomic) CGSize pointerSize;
 
@@ -76,7 +76,7 @@
 
 - (void)configureDataSource
 {
-    self.majorScales = [self.dataSource majorScalesInRulerView:self];
+    self.majorScaleCount = [self.dataSource numberOfMajorScaleInRulerView:self];
     self.minorScaleCount = [self.dataSource numberOfMinorScaleInRulerView:self];
     
     if ([self.delegate respondsToSelector:@selector(spacingBetweenMinorScaleInRulerView:)]) {
@@ -119,9 +119,6 @@
     if ([self.delegate respondsToSelector:@selector(fontForMajorScaleInRulerView:)]) {
         self.majorScaleFont = [self.delegate fontForMajorScaleInRulerView:self];
     }
-    
-    self.minValue = [self.majorScales[0] integerValue];
-    self.maxValue = [self.majorScales[self.majorScales.count-1] integerValue];
 }
 
 - (void)addConstraintForPointerImageView
@@ -144,21 +141,29 @@
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.majorScales.count+1;
+    if (self.majorScaleCount == 0 || self.minorScaleCount == 0) {
+        return 0;
+    }
+    return self.majorScaleCount+1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"DYRulerCollectionViewCell";
     DYRulerCollectionViewCell *rulerCollectionViewCell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    rulerCollectionViewCell.majorScales = self.majorScales;
     rulerCollectionViewCell.scaleSpacing = self.scaleSpacing;
+    rulerCollectionViewCell.majorScaleCount = self.majorScaleCount;
     rulerCollectionViewCell.minorScaleCount = self.minorScaleCount;
     rulerCollectionViewCell.minorScaleSize = self.minorScaleSize;
     rulerCollectionViewCell.majorScaleSize = self.majorScaleSize;
     rulerCollectionViewCell.isShowMinorScale = self.isShowMinorScale;
     rulerCollectionViewCell.majorScaleFont = self.majorScaleFont;
     rulerCollectionViewCell.pointerHeight = self.pointerSize.height;
+    self.minValue = [[self.dataSource rulerView:self textOfMajorScaleAtIndex:0] integerValue];
+    self.maxValue = [[self.dataSource rulerView:self textOfMajorScaleAtIndex:self.majorScaleCount-1] integerValue];
+    if (indexPath.item > 0) {
+        rulerCollectionViewCell.labelText = [self.dataSource rulerView:self textOfMajorScaleAtIndex:indexPath.item-1];
+    }
     [rulerCollectionViewCell configureWithIndexPath:indexPath];
     return rulerCollectionViewCell;
 }
@@ -168,7 +173,7 @@
 {
     if (indexPath.row == 0) {
         return CGSizeMake(self.frame.size.width*0.5-self.scaleSpacing, self.collectionView.frame.size.height);
-    } else if (indexPath.row == self.majorScales.count) {
+    } else if (indexPath.row == self.majorScaleCount) {
         return CGSizeMake(self.frame.size.width*0.5+self.scaleSpacing, self.collectionView.frame.size.height);
     } else {
         return CGSizeMake(self.minorScaleCount*self.scaleSpacing, self.collectionView.frame.size.height);
