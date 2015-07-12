@@ -45,8 +45,10 @@
 - (UIFont *)fontForMajorScaleInRulerView:(DYRulerView *)rulerView;
 // 是否显示小刻度
 - (BOOL)rulerViewShouldShowMinorScale:(DYRulerView *)rulerView;
-// 小刻度的尺寸
+// 小刻度尺寸
 - (CGSize)sizeForMinorScaleViewInRulerView:(DYRulerView *)rulerView;
+// 大刻度尺寸
+- (CGSize)sizeForMajorScaleViewInRulerView:(DYRulerView *)rulerView;
 // 选择刻度
 - (void)rulerView:(DYRulerView *)rulerView didChangeScaleWithMajorScale:(int)majorScale minorScale:(int)minorScale;
 

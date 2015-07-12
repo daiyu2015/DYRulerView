@@ -16,21 +16,13 @@
 
 @implementation DYRulerCollectionViewCell
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (void)addConstraintForLabel
 {
-    if (self = [super initWithFrame:frame]) {
-                
-    }
-    return self;
-}
-
-- (void)addConstraintForPointerImageView
-{
-    NSDictionary *metricsMap = @{ @"height" : @(20) };
+    NSDictionary *metricsMap = @{ @"height" : @(self.frame.size.height-self.majorScaleSize.height-self.pointerHeight) };
     NSDictionary *nameMap = @{ @"label" : self.label };
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1 constant:self.scaleSpacing+self.minorScaleSize.width*0.5]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:self.minorScaleSize.height*2+20]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[label(==height)]" options:0 metrics:metricsMap views:nameMap]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:self.majorScaleSize.height+20]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[label(<=height)]" options:0 metrics:metricsMap views:nameMap]];
 }
 
 - (void)configureWithIndexPath:(NSIndexPath *)indexPath
@@ -39,7 +31,6 @@
         [view removeFromSuperview];
     }
     self.label = [[UILabel alloc] init];
-    self.label.backgroundColor = [UIColor lightGrayColor];
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
     self.label.textColor = [UIColor whiteColor];
     if (self.majorScaleFont) {
@@ -51,7 +42,7 @@
         self.label.text = [NSString stringWithFormat:@"%@", self.majorScales[indexPath.row-1]];
     }
     [self.contentView addSubview:self.label];
-    [self addConstraintForPointerImageView];
+    [self addConstraintForLabel];
     if (indexPath.row == 0) {
         self.label.hidden = YES;
     } else if (indexPath.row == 1) {
@@ -68,7 +59,7 @@
     for (NSInteger index=initialCount; index<totalCount; index++) {
         UIView *view = [[UIView alloc] init];
         if (index == 1) {
-            view.frame = CGRectMake(index*self.scaleSpacing-self.minorScaleSize.width, 1, 2*self.minorScaleSize.width, 2*self.minorScaleSize.height);
+            view.frame = CGRectMake(index*self.scaleSpacing-0.5*self.majorScaleSize.width, 1, self.majorScaleSize.width, self.majorScaleSize.height);
         } else {
             if (self.isShowMinorScale) {
                 view.frame = CGRectMake(index*self.scaleSpacing-0.5*self.minorScaleSize.width, 1, self.minorScaleSize.width, self.minorScaleSize.height);

@@ -14,8 +14,10 @@
 @property (nonatomic) NSInteger scaleSpacing;
 @property (nonatomic, copy) NSArray *majorScales;
 @property (nonatomic) CGSize minorScaleSize;
+@property (nonatomic) CGSize majorScaleSize;
 @property (nonatomic) BOOL isShowMinorScale;
 @property (nonatomic, strong) UIFont *majorScaleFont;
+@property (nonatomic) CGFloat pointerHeight;
 
 - (void)configureWithIndexPath:(NSIndexPath *)indexPath;
 
