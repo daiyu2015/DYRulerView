@@ -66,8 +66,7 @@
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.pointerImageView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:0 constant:self.pointerSize.width]];
 }
 
-#pragma mark - UICollectionViewDataSource
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+- (void)configureDataSource
 {
     self.majorScales = [self.dataSource majorScalesInRulerView:self];
     self.minorScaleCount = [self.dataSource numberOfMinorScaleInRulerView:self];
@@ -104,7 +103,18 @@
     
     self.minValue = [self.majorScales[0] integerValue];
     self.maxValue = [self.majorScales[self.majorScales.count-1] integerValue];
-    
+}
+
+- (void)reloadData
+{
+    [self configureDataSource];
+    [self.collectionView reloadData];
+}
+
+#pragma mark - UICollectionViewDataSource
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    [self configureDataSource];
     return self.majorScales.count+1;
 }
 

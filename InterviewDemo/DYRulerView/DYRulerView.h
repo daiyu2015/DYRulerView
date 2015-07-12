@@ -16,6 +16,8 @@
 @property (nonatomic, weak) id <DYRulerViewDataSource> dataSource;
 @property (nonatomic, weak) id <DYRulerViewDelegate> delegate;
 
+- (void)reloadData;
+
 - (instancetype)initWithFrame:(CGRect)frame;
 
 @end
